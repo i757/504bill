@@ -53,7 +53,11 @@
                 if(password === ''){
                     return msg('请输入密码');
                 }
+                $.post(url + "user/login",{account:account,password:password},function (data) {
+
+                });
             }
+
         </script>
     </body>
 </html>
