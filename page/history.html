@@ -27,11 +27,18 @@
             <div class="col-xs-4 col-xs-offset-4 center"><h3>历史</h3></div>
         </div>
         <ul class="list-group">
-            <li class="list-group-item list-group-item-success">2018-03</li><span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
-            <li class="list-group-item list-group-item-info">2018-04</li>
-            <li class="list-group-item list-group-item-warning">2018-05</li>
-            <li class="list-group-item list-group-item-danger">2018-06</li>
+            <li class="list-group-item list-group-item-success clearfix">2018-03<div class="glyphicon glyphicon-chevron-up pull-right" aria-hidden="true"></div></li>
+            <li class="list-group-item list-group-item-info clearfix">2018-04<div class="glyphicon glyphicon-chevron-up pull-right" aria-hidden="true"></div></li>
+            <li class="list-group-item list-group-item-warning clearfix">2018-05<div class="glyphicon glyphicon-chevron-up pull-right" aria-hidden="true"></div></li>
+            <li class="list-group-item list-group-item-danger clearfix">2018-06<div class="glyphicon glyphicon-chevron-up pull-right" aria-hidden="true"></div></li>
         </ul>
     </div>
+
 </body>
+<script>
+    $('.list-group').on('click','li',function () {
+        var li = this.childNodes[1];
+        li.setAttribute('class','glyphicon glyphicon-chevron-down pull-right');
+    });
+</script>
 </html>
