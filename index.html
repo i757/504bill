@@ -44,6 +44,15 @@
 
         <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
         <script>
+            function callback(data) {
+                console.log(data.id)
+                console.log(data.account)
+                console.log(data.name)
+                localStorage.setItem("id", data.id);
+                localStorage.setItem("account", data.account);
+                localStorage.setItem("name", data.name);
+                window.location.href = "page/monthbill.html";
+            }
             function submitForm() {
                 var account = $('#account').val();
                 if(account === ''){
@@ -53,9 +62,10 @@
                 if(password === ''){
                     return msg('请输入密码');
                 }
-                $.post(url + "user/login",{account:account,password:password},function (data) {
-
-                });
+                ajaxRequest(url + "user/login", "POST", {
+                    account : account,
+                    password : password
+                }, callback);
             }
 
         </script>

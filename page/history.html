@@ -38,7 +38,12 @@
 <script>
     $('.list-group').on('click','li',function () {
         var li = this.childNodes[1];
-        li.setAttribute('class','glyphicon glyphicon-chevron-down pull-right');
+        var className = li.getAttribute('class');
+        if(className === 'glyphicon glyphicon-chevron-up pull-right'){
+            li.setAttribute('class','glyphicon glyphicon-chevron-down pull-right');
+        }else{
+            li.setAttribute('class','glyphicon glyphicon-chevron-up pull-right');
+        }
     });
 </script>
 </html>
