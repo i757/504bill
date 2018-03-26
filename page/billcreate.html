@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>账单添加</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="apple-touch-icon" href="../icon.png">
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+
+    <script src="../js/vendor/jquery-3.2.1.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../layer/layer.js"></script>
+    <script src="../js/app.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="row center-block">
+            <div class="col-xs-4 col-xs-offset-4 center" style="margin-top: 15px"><h4 id="month"></h4></div>
+            <div class="col-xs-2 col-xs-offset-2 center" style="margin-top: 15px">
+                <button class="btn btn-success" type="button" onclick="savebill()">保存</button></div>
+        </div>
+        <br>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label for="time" class="col-xs-2 control-label">时间</label>
+                <div class="col-xs-10">
+                    <input type="date" class="form-control" id="time" name="time" placeholder="时间">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="money" class="col-xs-2 control-label">消费</label>
+                <div class="col-xs-10">
+                    <input type="number" class="form-control" id="money" name="money" placeholder="消费">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="description" class="col-xs-2 control-label">说明</label>
+                <div class="col-xs-10">
+                    <textarea class="form-control" id="description" name="description" placeholder="说明" rows="3"></textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+<script>
+    var time = getNowFormatDate();
+    $(document).ready(function () {
+        $('#month').html(time);
+    });
+    function savebill() {
+        var time = $('#time').val();
+        if(time === ''){
+            return msg('请选择时间');
+        }
+        var money = $('#money').val();
+        if(money === ''){
+            return msg('请输入消费');
+        }
+        ajaxRequest(url + "bill", "POST", {
+            userId:localStorage.getItem('id'),
+            time : time,
+            money : money,
+            description:$('#description').val()
+        }, billcallback);
+    }
+    function billcallback(){
+        layer.confirm('保存成功,继续添加？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            document.location.reload();
+        }, function(){
+            window.location.href = './monthbill.html';
+        });
+    }
+</script>
+</html>

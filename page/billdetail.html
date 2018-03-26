@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>账单添加</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="apple-touch-icon" href="../icon.png">
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+
+    <script src="../js/vendor/jquery-3.2.1.min.js"></script>
+    <script src="../js/jquery.params.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../layer/layer.js"></script>
+    <script src="../js/app.js"></script>
+    <style type="text/css">
+        .center{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row center-block">
+            <div class="col-xs-4 col-xs-offset-4 center" style="margin-top: 15px"><h4>账单详细</h4></div>
+            <div class="col-xs-2 col-xs-offset-2 center" style="margin-top: 15px">
+                <button class="btn btn-success" type="button" onclick="deletebill()">删除</button></div>
+        </div>
+        <br>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label for="time" class="col-xs-2 control-label">时间</label>
+                <div class="col-xs-10">
+                    <input type="date" class="form-control" id="time" name="time" placeholder="时间">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="money" class="col-xs-2 control-label">消费</label>
+                <div class="col-xs-10">
+                    <input type="number" class="form-control" id="money" name="money" placeholder="消费">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="description" class="col-xs-2 control-label">说明</label>
+                <div class="col-xs-10">
+                    <textarea class="form-control" id="description" name="description" placeholder="说明" rows="3"></textarea>
+                </div>
+            </div>
+            <!--<div class="form-group">-->
+                <!--<div class="col-sm-offset-2 col-sm-10">-->
+                    <!--<button type="button" class="btn btn-success btn-lg btn-block" onclick="savebill()">保存</button>-->
+                <!--</div>-->
+            <!--</div>-->
+        </form>
+    </div>
+</body>
+<script>
+
+    var id = $.query.get('id');
+    // var id = '43f84684-c82f-4781-8c6e-e3d740f58313';
+    // var id = '598fba11-e08a-4c27-8676-54321a8b0093';
+    $(document).ready(function () {
+        ajaxRequest(url + 'bill/' + id,'GET',undefined,function (data) {
+            console.log(data)
+            if(data.flag === 1){
+                $('button').attr('disabled','disabled');
+                $('#time').attr('readonly','readonly');
+                $('#money').attr('readonly','readonly');
+                $('#description').attr('readonly','readonly');
+            }
+            $('#time').val(data.time);
+            $('#money').val(data.money);
+            $('#description').val(data.description);
+
+        })
+    });
+
+    function deletebill(){
+        layer.confirm('确定删除吗？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            ajaxRequest(url + 'bill/' + id,'DELETE',undefined,delete_callback);
+        }, function(){
+            return;
+        });
+    }
+
+    function delete_callback() {
+        window.location.href = './monthbill.html';
+    }
+</script>
+</html>

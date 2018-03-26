@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>当月账单</title>
+    <title>历史账单</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <link rel="apple-touch-icon" href="../icon.png">
@@ -24,26 +24,79 @@
 <body>
     <div class="container">
         <div class="row center-block">
-            <div class="col-xs-4 col-xs-offset-4 center"><h3>历史</h3></div>
+            <div class="col-xs-4 col-xs-offset-4 center" style="margin-top: 15px"><h4>历史</h4></div>
         </div>
         <ul class="list-group">
-            <li class="list-group-item list-group-item-success clearfix">2018-03<div class="glyphicon glyphicon-chevron-up pull-right" aria-hidden="true"></div></li>
-            <li class="list-group-item list-group-item-info clearfix">2018-04<div class="glyphicon glyphicon-chevron-up pull-right" aria-hidden="true"></div></li>
-            <li class="list-group-item list-group-item-warning clearfix">2018-05<div class="glyphicon glyphicon-chevron-up pull-right" aria-hidden="true"></div></li>
-            <li class="list-group-item list-group-item-danger clearfix">2018-06<div class="glyphicon glyphicon-chevron-up pull-right" aria-hidden="true"></div></li>
+
         </ul>
+
+        <div id="panel" class="panel panel-danger" style="margin:10px -15px 0;display: none">
+            <table class="table">
+                <thead>
+                    <tr><th>姓名</th><th>支出</th><th>应收</th><th></tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+
     </div>
 
 </body>
 <script>
+    $(document).ready(function () {
+        ajaxRequest(url + 'bill/history','GET',undefined,function (data) {
+            $('ul').empty();
+            if(data.length > 0){
+                console.log(data)
+                $.each(data,function (index,item) {
+                    var time = item.year;
+                    if(item.month < 10){
+                        time = time + '-0' + item.month;
+                    }else{
+                        time = time + '-' + item.month;
+                    }
+                    $('ul').append('<li id="'+item.id+'" class="list-group-item list-group-item-danger clearfix"><div>'+time+
+                        '<div class="glyphicon glyphicon-chevron-up pull-right" aria-hidden="true"></div></div></li>');
+                })
+            }else{
+                $('ul').html('暂无历史账单。');
+            }
+
+        })
+    });
+
+
+    var panel = $('#panel');
     $('.list-group').on('click','li',function () {
-        var li = this.childNodes[1];
-        var className = li.getAttribute('class');
+        var li = $(this),
+            id = li.attr('id'),
+            div = li.find('.glyphicon').get(0);
+
+        var className = div.getAttribute('class');
         if(className === 'glyphicon glyphicon-chevron-up pull-right'){
-            li.setAttribute('class','glyphicon glyphicon-chevron-down pull-right');
+            div.setAttribute('class','glyphicon glyphicon-chevron-down pull-right');
+            console.log(id);
+            historyDetail(id);
+            li.append(panel);
+            panel.slideToggle();
         }else{
-            li.setAttribute('class','glyphicon glyphicon-chevron-up pull-right');
+            div.setAttribute('class','glyphicon glyphicon-chevron-up pull-right');
+            $('#panel').slideToggle();
         }
     });
+
+    function historyDetail(id) {
+        ajaxRequest(url + 'bill/history/detail?id=' + id,'GET',undefined,function (data) {
+            console.log(data);
+            var tbody = $('.table tbody');
+            tbody.empty();
+            $.each(data.list,function (index,item) {
+                tbody.append('<tr><td>'+item.name+'</td><td>'+item.outMoney+'</td><td>'+item.inMoney+'</td></tr>');
+            });
+            tbody.append('<tr><td colspan="3">结算时间：'+data.resultTime+' 人均：'+data.avg+'</td></tr>');
+        })
+    }
 </script>
 </html>
